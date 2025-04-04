@@ -8,7 +8,7 @@ function initStartApp() {
         console.error("Start.io não carregou! Recarregue a página.");
         return false;
     }
-    return window.startApp.set({ appId: 'SEU_APP_ID_AQUI' }); // << SUBSTITUA SEU APP ID
+    return window.startApp.set({ appId: '203808249' }); // << SUBSTITUA SEU APP ID
 }
 
 // Assistir anúncio (REAL)
