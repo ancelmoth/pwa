@@ -1,93 +1,63 @@
-// Pontos do usuário
-let userPoints = localStorage.getItem('userPoints') || 0;
+// Variáveis do usuário
+let userPoints = parseInt(localStorage.getItem('userPoints')) || 0;
 document.getElementById('points').textContent = userPoints;
 
-// Assistir anúncio
+// Inicializa Start.io (VERIFICA SE CARREGOU)
+function initStartApp() {
+    if (!window.startApp) {
+        console.error("Start.io não carregou! Recarregue a página.");
+        return false;
+    }
+    return window.startApp.set({ appId: 'SEU_APP_ID_AQUI' }); // << SUBSTITUA SEU APP ID
+}
+
+// Assistir anúncio (REAL)
 document.getElementById('watchAd').addEventListener('click', function() {
-    showAd().then(() => {
-        userPoints = parseInt(userPoints) + 10;
-        updatePoints();
+    const sdk = initStartApp();
+    if (!sdk) {
+        alert("Erro ao carregar anúncios. Recarregue o app.");
+        return;
+    }
+
+    sdk.loadAd(window.startApp.AdMode.REWARDED, {
+        success: function(ad) {
+            ad.show();
+            ad.onClose = function() {
+                userPoints += 10;
+                updatePoints();
+            };
+        },
+        error: function() {
+            alert("Nenhum anúncio disponível agora. Tente mais tarde.");
+        }
     });
 });
 
-// Indicar amigo
+// Indicar amigo (simulação)
 document.getElementById('invite').addEventListener('click', function() {
     const link = `${window.location.origin}?ref=${generateReferralCode()}`;
-    alert(`Indique amigos com este link: ${link}`);
-    userPoints = parseInt(userPoints) + 50;
+    alert(`Indique amigos: ${link}`);
+    userPoints += 50;
     updatePoints();
 });
 
 // Resgatar prêmios
 document.getElementById('redeem').addEventListener('click', function() {
-    if (userPoints < 100) {
-        alert('Você precisa de pelo menos 100 pontos para resgatar');
-        return;
-    }
-    
-    alert(`Prêmios disponíveis:
-    - 100 pts: R$1 via Pix
-    - 500 pts: R$5 via Pix
-    - 1000 pts: R$10 via Pix
-    
-    Envie um e-mail para resgate@seudominio.com com seu código de usuário.`);
+    alert(`Resgate via PIX:\n100pts = R$1\n500pts = R$5\nEnvie e-mail para resgate@seudominio.com`);
 });
 
-// Mostrar anúncio (simulado - você integraria uma rede de anúncios real aqui)
-function showAd() {
-    return new Promise((resolve) => {
-        if (!window.startApp) { // Checa se o Start.io carregou
-            alert("Recarregue a página para ver anúncios.");
-            return resolve();
-        }
-        
-        const sdk = window.startApp.set({
-            appId: '203808249' // COLOCA TEU APP ID AQUI
-        });
-        
-        sdk.loadAd(window.startApp.AdMode.REWARDED, {
-            success: function(ad) {
-                ad.show();
-                ad.onClose = function() {
-                    userPoints += 10; // Dá os pontos quando o ad fecha
-                    updatePoints();
-                    resolve();
-                };
-            },
-            error: function() {
-                alert("Sem anúncios agora. Tente mais tarde.");
-                resolve();
-            }
-        });
-    });
-}
-
-// Gerar código de indicação
+// Funções auxiliares
 function generateReferralCode() {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
-// Atualizar pontos
 function updatePoints() {
     document.getElementById('points').textContent = userPoints;
     localStorage.setItem('userPoints', userPoints);
 }
 
-// Verificar parâmetro de referência na URL
+// Verifica referência na URL
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('ref')) {
-    alert(`Você foi indicado por ${urlParams.get('ref')}! Ganhe 20 pontos extras ao se cadastrar.`);
+    alert(`Você foi indicado por ${urlParams.get('ref')}! Ganhe 20pts extras ao se cadastrar.`);
 }
-
-// Registra o Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-          console.log('ServiceWorker registrado com sucesso!');
-        })
-        .catch(err => {
-          console.log('Falha ao registrar ServiceWorker:', err);
-        });
-    });
-  }
