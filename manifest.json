@@ -1,0 +1,31 @@
+{
+    "name": "Ganhe Recompensas",
+    "short_name": "Recompensas",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4CAF50",
+    "description": "Ganhe pontos assistindo anúncios e resgate prêmios!",
+    "icons": [
+        {
+            "src": "assets/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}{
+    "name": "Ganhe Recompensas",
+    "short_name": "Recompensas",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4CAF50",
+    "description": "Ganhe pontos assistindo anúncios e resgate prêmios!",
+    "icons": [
+        {
+            "src": "assets/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

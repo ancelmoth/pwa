@@ -1,0 +1,17 @@
+# Lixo do Flutter
+/build/
+/android/
+/ios/
+/.dart_tool/
+/.pub-cache/
+/.metadata
+
+# Configurações sensíveis
+.env
+*.key
+
+# Lixo de editor
+.vscode/
+.idea/
+*.log
+*.lock
