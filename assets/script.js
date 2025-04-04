@@ -36,17 +36,29 @@ document.getElementById('redeem').addEventListener('click', function() {
 // Mostrar anúncio (simulado - você integraria uma rede de anúncios real aqui)
 function showAd() {
     return new Promise((resolve) => {
-        const adContainer = document.getElementById('adContainer');
-        adContainer.innerHTML = '<p>Anúncio em andamento... (10 segundos)</p>';
+        if (!window.startApp) { // Checa se o Start.io carregou
+            alert("Recarregue a página para ver anúncios.");
+            return resolve();
+        }
         
-        // Simula um anúncio de 10 segundos
-        setTimeout(() => {
-            adContainer.innerHTML = '<p>Anúncio concluído! +10 pontos</p>';
-            setTimeout(() => {
-                adContainer.innerHTML = '';
+        const sdk = window.startApp.set({
+            appId: '203808249' // COLOCA TEU APP ID AQUI
+        });
+        
+        sdk.loadAd(window.startApp.AdMode.REWARDED, {
+            success: function(ad) {
+                ad.show();
+                ad.onClose = function() {
+                    userPoints += 10; // Dá os pontos quando o ad fecha
+                    updatePoints();
+                    resolve();
+                };
+            },
+            error: function() {
+                alert("Sem anúncios agora. Tente mais tarde.");
                 resolve();
-            }, 2000);
-        }, 10000);
+            }
+        });
     });
 }
 
